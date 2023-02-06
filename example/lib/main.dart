@@ -9,6 +9,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
+import 'package:video_player_avfoundation/video_player_avfoundation.dart';
 
 void main() {
   runApp(

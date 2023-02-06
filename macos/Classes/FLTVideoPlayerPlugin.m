@@ -64,7 +64,8 @@ static void* playbackBufferFullContext = &playbackBufferFullContext;
 
 @implementation FLTVideoPlayer
 - (instancetype)initWithAsset:(NSString*)asset frameUpdater:(FLTFrameUpdater*)frameUpdater {
-  NSString* path = [[NSBundle mainBundle] pathForResource:asset ofType:nil];
+    NSBundle *flutterBundle = [NSBundle bundleWithIdentifier:@"io.flutter.flutter.app"];
+  NSString* path = [flutterBundle pathForResource:asset ofType:nil];
   return [self initWithURL:[NSURL fileURLWithPath:path] frameUpdater:frameUpdater];
 }
 
@@ -600,7 +601,21 @@ static CVReturn OnDisplayLink(CVDisplayLinkRef CV_NONNULL displayLink,
 - (FLTTextureMessage*)create:(FLTCreateMessage*)input error:(FlutterError**)error {
   FLTFrameUpdater* frameUpdater = [[FLTFrameUpdater alloc] initWithRegistry:_registry];
   FLTVideoPlayer* player;
-  if (input.uri) {
+    if (input.asset) {
+        NSString *directory;
+        if (input.packageName) {
+            directory = [NSString stringWithFormat:@"flutter_assets/packages/%@/", input.packageName];
+        } else {
+            directory = [NSString stringWithFormat:@"flutter_assets/"];
+        }
+        NSString *assetPath = [directory stringByAppendingString:input.asset];
+      player = [[FLTVideoPlayer alloc] initWithAsset:assetPath frameUpdater:frameUpdater];
+      return [self onPlayerSetup:player frameUpdater:frameUpdater];
+    } else if (input.uri) {
+      /// TODO: Add HTTP Headers:
+//      player = [[FLTVideoPlayer alloc] initWithURL:[NSURL URLWithString:input.uri]
+//                                      frameUpdater:frameUpdater
+//                                       httpHeaders:input.httpHeaders];
     player = [[FLTVideoPlayer alloc] initWithURL:[NSURL URLWithString:input.uri]
                                     frameUpdater:frameUpdater];
     return [self onPlayerSetup:player frameUpdater:frameUpdater];

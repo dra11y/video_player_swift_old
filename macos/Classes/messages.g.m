@@ -338,6 +338,7 @@ void FLTAVFoundationVideoPlayerApiSetup(id<FlutterBinaryMessenger> binaryMesseng
         binaryMessenger:binaryMessenger
                   codec:FLTAVFoundationVideoPlayerApiGetCodec()];
     if (api) {
+        NSLog(@"Tryng to run dev.flutter.pigeon.AVFoundationVideoPlayerApi.create");
       NSCAssert(
           [api respondsToSelector:@selector(create:error:)],
           @"FLTAVFoundationVideoPlayerApi api (%@) doesn't respond to @selector(create:error:)",
